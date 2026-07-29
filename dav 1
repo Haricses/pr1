@@ -1,0 +1,16 @@
+import numpy as np
+print("NumPy Version:", np.version)
+import pandas as pd
+print("Pandas Version:", pd._version_)
+import matplotlib
+print("Matplotlib Version:", matplotlib._version_)
+import seaborn as sns
+print("Seaborn Version:", sns._version_)
+import statsmodels.api as sm
+print("Statsmodels Version:", sm._version_)
+import scipy
+print("SciPy Version:", scipy._version_)
+import plotly
+print("Plotly Version:", plotly._version_)
+import bokeh
+print("Bokeh Version:", bokeh._version_)
