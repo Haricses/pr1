@@ -1,0 +1,78 @@
+import pandas as pd
+import numpy as np
+from scipy.stats import skew, kurtosis
+
+# Define Relevant Numerical Columns to create sample data
+numerical_columns = ["Glucose", "BloodPressure", "SkinThickness", "Insulin", "BMI",
+"DiabetesPedigreeFunction", "Age"]
+
+# Creating sample DataFrames for demonstration purposes
+# Sample data for UCI Diabetes Dataset
+uci_data = {
+    "Pregnancies": np.random.randint(0, 17, 100),
+    "Glucose": np.random.randint(70, 200, 100),
+    "BloodPressure": np.random.randint(50, 120, 100),
+    "SkinThickness": np.random.randint(10, 60, 100),
+    "Insulin": np.random.randint(0, 850, 100),
+    "BMI": np.random.uniform(15.0, 50.0, 100),
+    "DiabetesPedigreeFunction": np.random.uniform(0.1, 2.5, 100),
+    "Age": np.random.randint(20, 80, 100),
+    "Outcome": np.random.randint(0, 2, 100)
+}
+uci_diabetes = pd.DataFrame(uci_data)
+
+# Sample data for Pima Indians Diabetes Dataset (similar structure expected)
+pima_data = {
+    "Pregnancies": np.random.randint(0, 17, 100),
+    "Glucose": np.random.randint(70, 200, 100),
+    "BloodPressure": np.random.randint(50, 120, 100),
+    "SkinThickness": np.random.randint(10, 60, 100),
+    "Insulin": np.random.randint(0, 850, 100),
+    "BMI": np.random.uniform(15.0, 50.0, 100),
+    "DiabetesPedigreeFunction": np.random.uniform(0.1, 2.5, 100),
+    "Age": np.random.randint(20, 80, 100),
+    "Outcome": np.random.randint(0, 2, 100)
+}
+pima_diabetes = pd.DataFrame(pima_data)
+
+# Display Dataset Samples
+print("UCI Diabetes Dataset Sample:")
+print(uci_diabetes.head())
+print("\nPima Indians Diabetes Dataset Sample:")
+print(pima_diabetes.head())
+
+# Univariate Analysis Function
+def univariate_analysis(df, columns):
+    stats = {}
+    for col in columns:
+        # Ensure the column exists in the DataFrame before attempting to calculate stats
+        if col in df.columns:
+            # Filter out zeros or NaNs from relevant columns if they represent missing data
+            # For example, Glucose, BloodPressure, SkinThickness, Insulin, BMI often have 0 as missing data
+            cleaned_col = df[col].replace(0, np.nan).dropna()
+            if not cleaned_col.empty:
+                stats[col] = {
+                    "Mean": np.mean(cleaned_col),
+                    "Median": np.median(cleaned_col),
+                    "Mode": cleaned_col.mode()[0] if not cleaned_col.mode().empty else np.nan,
+                    "Variance": np.var(cleaned_col, ddof=1),
+                    "Standard Deviation": np.std(cleaned_col, ddof=1),
+                    "Skewness": skew(cleaned_col),
+                    "Kurtosis": kurtosis(cleaned_col)
+                }
+            else:
+                stats[col] = {stat: np.nan for stat in ["Mean", "Median", "Mode", "Variance", "Standard Deviation", "Skewness", "Kurtosis"]}
+        else:
+            print(f"Warning: Column '{col}' not found in the DataFrame.")
+            stats[col] = {stat: np.nan for stat in ["Mean", "Median", "Mode", "Variance", "Standard Deviation", "Skewness", "Kurtosis"]}
+    return pd.DataFrame(stats).T
+
+# Perform Univariate Analysis
+uci_stats = univariate_analysis(uci_diabetes, numerical_columns)
+pima_stats = univariate_analysis(pima_diabetes, numerical_columns)
+
+# Display Results
+print("\nUCI Diabetes Dataset Statistics:")
+print(uci_stats)
+print("\nPima Indians Diabetes Dataset Statistics:")
+print(pima_stats)
